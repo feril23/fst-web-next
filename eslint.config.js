@@ -18,8 +18,8 @@ export default tseslint.config(
       "react-refresh": reactRefresh,
     },
     rules: {
-      "react/no-unescaped-entities": "off",
-      "@next/next/no-page-custom-font": "off",
+      ...reactHooks.configs.recommended.rules,
+      "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
     },
   }
 );
