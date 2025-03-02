@@ -1,5 +1,7 @@
 const CACHE_EXPIRATION = 600; // 10 menit dalam DETIK (untuk ISR)
 
+export const dynamic = "force-dynamic";
+
 export async function getFacultyData() {
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/faculty`, {
