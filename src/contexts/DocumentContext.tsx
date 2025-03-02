@@ -17,14 +17,15 @@ const DocumentContext = createContext<DocumentContextType | undefined>(undefined
 
 export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Ambil data dari localStorage saat pertama kali komponen dimuat
-  const [documentLink, setDocumentLinkState] = useState<string | null>(
-    () => localStorage.getItem("documentLink") || null
-  );
-  const [documentName, setDocumentNameState] = useState<string | null>(
-    () => localStorage.getItem("documentName") || null
-  );
+  const [documentLink, setDocumentLinkState] = useState<string | null>(null);
+  const [documentName, setDocumentNameState] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setDocumentLinkState(localStorage.getItem("documentLink") || null);
+    setDocumentNameState(localStorage.getItem("documentName") || null);
+  }, []);
 
   // Fungsi pembungkus untuk menyimpan ke localStorage
   const setDocumentLink = (link: string) => {
