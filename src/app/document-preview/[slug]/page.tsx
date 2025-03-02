@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import DocumentPreview from "./DocumentPreview";
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   // Convert slug to title case (e.g., "teknik-informatika" -> "Teknik Informatika")
   const title = (await params).slug;
 
