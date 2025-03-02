@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import ProgramStudi from "./ProgramStudi";
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   // Convert slug to title case (e.g., "teknik-informatika" -> "Teknik Informatika")
   const title = (await params).slug
     .split("-")
@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function DekanatPage({ params }: { params: { slug: string } }) {
+export default async function DekanatPage({ params }: { readonly params: Promise<{ slug: string }> }) {
   const slug = (await params).slug;
   return <ProgramStudi slug={slug} />;
 }
