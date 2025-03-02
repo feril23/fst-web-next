@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import axiosInstance from "../../../services/api";
 
 export const dynamic = "force-static"; // Memaksa route menjadi statis
+export const fetchCache = "force-no-store";
 export const revalidate = 600;
 
 export async function GET() {
