@@ -18,8 +18,8 @@ export default tseslint.config(
       "react-refresh": reactRefresh,
     },
     rules: {
-      "no-unused-vars": "off",
-      "@typescript-eslint/no-unused-vars": "warn",
+      "react/no-unescaped-entities": "off",
+      "@next/next/no-page-custom-font": "off",
     },
   }
 );
