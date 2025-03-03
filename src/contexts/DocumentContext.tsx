@@ -16,23 +16,23 @@ interface DocumentContextType {
 const DocumentContext = createContext<DocumentContextType | undefined>(undefined);
 
 export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Inisialisasi dengan null, kemudian update di useEffect
   const [documentLink, setDocumentLinkState] = useState<string | null>(null);
   const [documentName, setDocumentNameState] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Flag untuk menunjukkan bahwa data sudah di-load dari localStorage
+  const [initialized, setInitialized] = useState(false);
 
-  // Saat komponen dimount, ambil nilai dari localStorage
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedLink = localStorage.getItem("documentLink");
       const storedName = localStorage.getItem("documentName");
       if (storedLink) setDocumentLinkState(storedLink);
       if (storedName) setDocumentNameState(storedName);
+      setInitialized(true);
     }
   }, []);
 
-  // Fungsi pembungkus untuk menyimpan nilai ke state dan localStorage
   const setDocumentLink = (link: string) => {
     setDocumentLinkState(link);
     if (typeof window !== "undefined") {
@@ -47,13 +47,12 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
-  // Bersihkan localStorage jika nilai state dihapus
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (initialized && typeof window !== "undefined") {
       if (!documentLink) localStorage.removeItem("documentLink");
       if (!documentName) localStorage.removeItem("documentName");
     }
-  }, [documentLink, documentName]);
+  }, [documentLink, documentName, initialized]);
 
   return (
     <DocumentContext.Provider
