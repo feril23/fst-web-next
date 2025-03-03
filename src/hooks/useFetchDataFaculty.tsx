@@ -1,11 +1,27 @@
 const CACHE_EXPIRATION = 600; // 10 menit dalam DETIK (untuk ISR)
 
-export const dynamic = "force-dynamic";
-export const fetchCache = "force-no-store";
-
 export async function getFacultyData() {
+  const populateFields = [
+    "Mission",
+    "Structure",
+    "History",
+    "Sosmed",
+    "Advantages",
+    "Facilitie.Images.Image",
+    "Dean_Structure",
+    "Hero.Image",
+    "Dean_Structure.Dean.lecture.Foto",
+    "Dean_Structure.Vice_Dean_1.lecture.Foto",
+    "Dean_Structure.Vice_Dean_2.lecture.Foto",
+    "Dean_Structure.Vice_Dean_3.lecture.Foto",
+  ];
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/faculty`);
+    const API_URL = `${process.env.STRAPI_URL}/api/faculty`;
+    const urlProgram = `${API_URL}?${populateFields.map((field) => `populate=${field}`).join("&")}`;
+
+    const res = await fetch(urlProgram, {
+      next: { revalidate: CACHE_EXPIRATION }, // ISR: revalidate setiap 10 menit
+    });
 
     if (!res.ok) {
       const text = await res.text();
