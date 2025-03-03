@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import axiosInstance from "../../../services/api";
 
-export const dynamic = "force-static";
-
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const namaProgram = searchParams.get("programName") || 1;
