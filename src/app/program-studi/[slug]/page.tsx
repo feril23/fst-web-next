@@ -1,6 +1,20 @@
 import { Metadata } from "next";
 import ProgramStudi from "./ProgramStudi";
 
+export const dynamicParams = true;
+
+// 2. Generate static paths untuk slug yang valid
+export async function generateStaticParams() {
+  return [
+    { slug: "teknologi-informasi" },
+    { slug: "biologi" },
+    { slug: "kimia" },
+    { slug: "teknik-fisika" },
+    { slug: "teknik-lingkungan" },
+    { slug: "arsitektur" },
+  ];
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   // Convert slug to title case (e.g., "teknik-informatika" -> "Teknik Informatika")
   const title = (await params).slug
