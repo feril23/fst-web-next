@@ -2,8 +2,6 @@ import Link from "next/link";
 import { Home } from "lucide-react";
 
 const NotFound = () => {
-  const navigate = useRouter();
-
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 text-gray-700">
       <h1 className="text-4xl font-bold text-black">404</h1>
