@@ -2,8 +2,8 @@
 
 import React from "react";
 import { ArrowLeft } from "lucide-react";
-import PDFViewer from "../../../components/PDFViewer";
-import { useDocument } from "../../../contexts/DocumentContext";
+import PDFViewer from "../../components/PDFViewer";
+import { useDocument } from "../../contexts/DocumentContext";
 import { useRouter } from "next/navigation";
 
 // Komponen untuk halaman "Dokumen Tidak Ditemukan"

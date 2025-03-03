@@ -17,8 +17,7 @@ export const Documents = ({ data }) => {
   const handlePreview = (document: Document) => {
     setDocumentLink(document.Document_Link);
     setDocumentName(document.Document_Name);
-    const encodedName = encodeURIComponent(document.Document_Name);
-    router.push(`/document-preview/${encodedName}`);
+    router.push(`/document-preview`);
   };
 
   return (

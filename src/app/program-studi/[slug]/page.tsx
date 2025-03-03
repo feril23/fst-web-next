@@ -32,3 +32,4 @@ export default async function DekanatPage({ params }: { readonly params: Promise
   const slug = (await params).slug;
   return <ProgramStudi slug={slug} />;
 }
+
