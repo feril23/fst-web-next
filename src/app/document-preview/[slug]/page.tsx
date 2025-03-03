@@ -3,13 +3,12 @@ import DocumentPreview from "./DocumentPreview";
 
 export const dynamicParams = true;
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+export async function generateMetadata(): Promise<Metadata> {
   // Convert slug to title case (e.g., "teknik-informatika" -> "Teknik Informatika")
-  const title = params.slug;
 
   return {
-    title: `${title} | Fakultas Sains dan Teknologi UIN Ar-Raniry`,
-    description: `Halaman Program Studi ${title} Fakultas Sains dan Teknologi UIN Ar-Raniry`,
+    title: `Document | Fakultas Sains dan Teknologi UIN Ar-Raniry`,
+    description: `Halaman Document Fakultas Sains dan Teknologi UIN Ar-Raniry`,
   };
 }
 
