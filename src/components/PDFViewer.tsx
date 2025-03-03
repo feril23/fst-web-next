@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState, useRef } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { ChevronLeft, ChevronRight, Download, Loader2, RefreshCw } from "lucide-react";
@@ -162,3 +164,4 @@ const PDFViewer = ({ url }: PDFViewerProps) => {
 };
 
 export default PDFViewer;
+
