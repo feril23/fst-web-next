@@ -30,6 +30,11 @@ const nextConfig = {
   },
   distDir: "./dist", // Changes the build output directory to `./dist/`.
   future: { webpack5: true },
+  webpack: (config) => {
+    config.resolve.alias.canvas = false;
+
+    return config;
+  },
 };
 
 export default nextConfig;
