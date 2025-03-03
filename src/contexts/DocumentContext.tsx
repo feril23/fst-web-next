@@ -16,31 +16,43 @@ interface DocumentContextType {
 const DocumentContext = createContext<DocumentContextType | undefined>(undefined);
 
 export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Ambil data dari localStorage saat pertama kali komponen dimuat
-  const [documentLink, setDocumentLinkState] = useState<string | null>(
-    () => localStorage.getItem("documentLink") || null
-  );
-  const [documentName, setDocumentNameState] = useState<string | null>(
-    () => localStorage.getItem("documentName") || null
-  );
+  // Inisialisasi dengan null, kemudian update di useEffect
+  const [documentLink, setDocumentLinkState] = useState<string | null>(null);
+  const [documentName, setDocumentNameState] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Fungsi pembungkus untuk menyimpan ke localStorage
+  // Saat komponen dimount, ambil nilai dari localStorage
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedLink = localStorage.getItem("documentLink");
+      const storedName = localStorage.getItem("documentName");
+      if (storedLink) setDocumentLinkState(storedLink);
+      if (storedName) setDocumentNameState(storedName);
+    }
+  }, []);
+
+  // Fungsi pembungkus untuk menyimpan nilai ke state dan localStorage
   const setDocumentLink = (link: string) => {
     setDocumentLinkState(link);
-    localStorage.setItem("documentLink", link);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("documentLink", link);
+    }
   };
 
   const setDocumentName = (name: string) => {
     setDocumentNameState(name);
-    localStorage.setItem("documentName", name);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("documentName", name);
+    }
   };
 
-  // Membersihkan localStorage saat documentLink atau documentName dihapus
+  // Bersihkan localStorage jika nilai state dihapus
   useEffect(() => {
-    if (!documentLink) localStorage.removeItem("documentLink");
-    if (!documentName) localStorage.removeItem("documentName");
+    if (typeof window !== "undefined") {
+      if (!documentLink) localStorage.removeItem("documentLink");
+      if (!documentName) localStorage.removeItem("documentName");
+    }
   }, [documentLink, documentName]);
 
   return (
@@ -63,7 +75,7 @@ export const DocumentProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
 export const useDocument = () => {
   const context = useContext(DocumentContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useDocument must be used within a DocumentProvider");
   }
   return context;
