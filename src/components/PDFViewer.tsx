@@ -27,15 +27,18 @@ const PDFViewer = ({ url }: PDFViewerProps) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(`https://proxy-gdrive.up.railway.app/fetch-pdf/${fileId}`);
+      const response = await fetch(`/api/fetch-pdf?fileId=${fileId}`, {
+        mode: "cors", // Tambahkan CORS jika diperlukan
+      });
       if (!response.ok) throw new Error("Failed to fetch PDF");
       const blob = await response.blob();
       const pdfObjectUrl = URL.createObjectURL(blob);
       setPdfUrl(pdfObjectUrl);
     } catch (err) {
       setError("Gagal memuat PDF. Matikan terlebih dahulu Adblock atau IDM yang Anda miliki.");
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   useEffect(() => {
