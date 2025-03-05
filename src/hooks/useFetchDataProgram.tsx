@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axiosInstance from "../services/api";
 
 interface ProgramData {
   program: unknown;
@@ -48,6 +47,7 @@ const FetchProgramData = (programId: string) => {
       "teknik-lingkungan": "TL",
       arsitektur: "ARS",
     };
+
     const programName = programMapping[programId] || programId;
     const programDosenName = programDosenMapping[programId] || programId;
 
@@ -59,14 +59,28 @@ const FetchProgramData = (programId: string) => {
           .map((field) => `populate=${field}`)
           .join("&")}`;
         const urlDosen = `https://fst-dashboard.up.railway.app/api/lectures?filters[Program][$eq]=${programDosenName}&populate=*`;
-        const [programResponse, dosenResponse] = await Promise.all([
-          axiosInstance.get(urlProgram),
-          axiosInstance.get(urlDosen),
+
+        // Gunakan fetch dengan opsi ISR (catatan: ISR hanya aktif di Server Components atau fungsi getStaticProps)
+        const [programRes, dosenRes] = await Promise.all([
+          fetch(urlProgram, { next: { revalidate: 600 } }),
+          fetch(urlDosen, { next: { revalidate: 600 } }),
         ]);
 
+        if (!programRes.ok) {
+          const errorText = await programRes.text();
+          throw new Error(`Failed to fetch program data: ${programRes.status} - ${errorText}`);
+        }
+        if (!dosenRes.ok) {
+          const errorText = await dosenRes.text();
+          throw new Error(`Failed to fetch dosen data: ${dosenRes.status} - ${errorText}`);
+        }
+
+        const programData = await programRes.json();
+        const dosenData = await dosenRes.json();
+
         setData({
-          program: programResponse.data.data,
-          dosen: dosenResponse.data,
+          program: programData.data,
+          dosen: dosenData.data,
         });
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
