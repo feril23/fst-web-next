@@ -1,5 +1,5 @@
 import Link from "next/link";
-import logo from "../../../public/logo.webp";
+import logo from "../../../public/icon.webp";
 import Image from "next/image";
 
 interface LogoProps {
