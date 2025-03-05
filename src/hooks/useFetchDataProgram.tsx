@@ -1,61 +1,70 @@
-"use client";
+export async function getProgramData(slug: string) {
+  const programMapping: Record<string, string> = {
+    "teknologi-informasi": "information-technology",
+    biologi: "biology",
+    kimia: "chemical",
+    "teknik-fisika": "physics",
+    "teknik-lingkungan": "environmental-engineering",
+    arsitektur: "architecture",
+  };
 
-import { useEffect, useState } from "react";
+  const programDosenMapping: Record<string, string> = {
+    "teknologi-informasi": "TI",
+    biologi: "BIO",
+    kimia: "KIM",
+    "teknik-fisika": "TF",
+    "teknik-lingkungan": "TL",
+    arsitektur: "ARS",
+  };
 
-const FetchProgramData = (programId: string) => {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const programName = programMapping[slug] || slug;
+  const programDosenName = programDosenMapping[slug] || slug;
 
-  useEffect(() => {
-    const programMapping: Record<string, string> = {
-      "teknologi-informasi": "information-technology",
-      biologi: "biology",
-      kimia: "chemical",
-      "teknik-fisika": "physics",
-      "teknik-lingkungan": "environmental-engineering",
-      arsitektur: "architecture",
-    };
+  const populateFields = [
+    "Sosmed",
+    "Mission",
+    "Purpose",
+    "Hero",
+    "Study_Program_Secretary.lecture.Foto",
+    "Services.Work_Schedule",
+    "Services.Staff.Foto",
+    "Facilities.Images",
+    "Curriculums.Courses",
+    "Head_of_Study_Program.lecture.Foto",
+    "History",
+    "Accreditation",
+    "Job_Prospects",
+    "Documents",
+  ];
 
-    const programDosenMapping: Record<string, string> = {
-      "teknologi-informasi": "TI",
-      biologi: "BIO",
-      kimia: "KIM",
-      "teknik-fisika": "TF",
-      "teknik-lingkungan": "TL",
-      arsitektur: "ARS",
-    };
-    const programName = programMapping[programId] || programId;
-    const programDosenName = programDosenMapping[programId] || programId;
+  // Gunakan environment variable untuk URL API eksternal
+  const baseUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
+  if (!baseUrl) {
+    throw new Error("NEXT_PUBLIC_API_URL tidak diset di environment");
+  }
 
-    const fetchData = async () => {
-      try {
-        setLoading(true);
+  const urlProgram = `${baseUrl}/api/${programName}?${populateFields.map((field) => `populate=${field}`).join("&")}`;
+  const urlDosen = `${baseUrl}/api/lectures?filters[Program][$eq]=${programDosenName}&populate=*`;
 
-        const urlProgram = `/api/program?programName=${programName}&dosenProdi=${programDosenName}`;
-        const response = await fetch(urlProgram, {
-          next: { revalidate: 600 }, // Cache selama 5 menit
-        });
+  // Lakukan fetching menggunakan fetch dan dukung ISR dengan opsi next.revalidate
+  const [programRes, dosenRes] = await Promise.all([
+    fetch(urlProgram, { next: { revalidate: 600 } }),
+    fetch(urlDosen, { next: { revalidate: 600 } }),
+  ]);
 
-        const data = await response.json();
+  if (!programRes.ok) {
+    throw new Error(`Gagal mengambil data program: ${programRes.status}`);
+  }
+  if (!dosenRes.ok) {
+    throw new Error(`Gagal mengambil data dosen: ${dosenRes.status}`);
+  }
 
-        setData(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "An error occurred");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [programId]);
+  const programData = await programRes.json();
+  const dosenData = await dosenRes.json();
 
   return {
-    data,
-    loading,
-    error,
+    program: programData.data,
+    dosen: dosenData.data,
   };
-};
-
-export default FetchProgramData;
+}
 
