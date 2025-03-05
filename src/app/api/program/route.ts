@@ -29,10 +29,10 @@ export async function GET(request: Request) {
   }
 
   try {
-    const urlProgram = `https://fst-dashboard.up.railway.app/api/${namaProgram}?${populateFields
+    const urlProgram = `${process.env.STRAPI_URL}/api/${namaProgram}?${populateFields
       .map((field) => `populate=${field}`)
       .join("&")}`;
-    const urlDosen = `https://fst-dashboard.up.railway.app/api/lectures?filters[Program][$eq]=${dosenProdi}&populate=*`;
+    const urlDosen = `${process.env.STRAPI_URL}/api/lectures?filters[Program][$eq]=${dosenProdi}&populate=*`;
     const [programResponse, dosenResponse] = await Promise.all([
       axiosInstance.get(urlProgram),
       axiosInstance.get(urlDosen),
