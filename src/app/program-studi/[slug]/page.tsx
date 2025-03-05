@@ -3,6 +3,8 @@ import ProgramStudi from "./ProgramStudi";
 
 export const dynamicParams = true;
 
+export const revalidate = 600;
+
 // 2. Generate static paths untuk slug yang valid
 export async function generateStaticParams() {
   return [
