@@ -60,7 +60,7 @@ const components = {
   Documents: dynamic(() => import("../../../components/programstudi/Documents")),
 };
 
-export default function ProgramStudi({ slug }) {
+export default function ProgramStudi({ slug, data }) {
   const menuItems = useMemo(
     () => [
       { id: "sejarah", label: "Sejarah", icon: BookOpen },
@@ -77,7 +77,6 @@ export default function ProgramStudi({ slug }) {
     []
   );
 
-  const programId = slug;
   const [activeSection, setActiveSection] = useState("sejarah");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -109,8 +108,6 @@ export default function ProgramStudi({ slug }) {
     [scrollToContent]
   );
 
-  const { data, loading, error } = FetchProgramData(programId);
-
   console.log(data);
 
   // Close menu when clicking outside
@@ -125,14 +122,6 @@ export default function ProgramStudi({ slug }) {
     document.addEventListener("click", handleClickOutside);
     return () => document.removeEventListener("click", handleClickOutside);
   }, [isMenuOpen]);
-
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-
-  if (error) {
-    return <ErrorMessage message={error} />;
-  }
 
   if (!data?.program) {
     return <NotFound message="Program tidak ditemukan" />;
@@ -292,20 +281,6 @@ const LoadingSpinner = () => (
         <div className="h-64 bg-gray-300 rounded-xl"></div>
       </div>
     </div>
-  </div>
-);
-
-const ErrorMessage = ({ message }) => (
-  <div className="flex flex-col items-center justify-center min-h-screen gap-4 p-4 text-center">
-    <div className="text-red-600 text-lg">{message}</div>
-
-    <button
-      onClick={() => window.location.reload()}
-      className="flex items-center gap-2 px-4 py-2 text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-colors"
-    >
-      <RefreshCw className="w-4 h-4" />
-      Reload Page
-    </button>
   </div>
 );
 
